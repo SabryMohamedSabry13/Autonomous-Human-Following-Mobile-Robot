@@ -1,6 +1,6 @@
 # 🤖 Autonomous Human-Following Mobile Robot
 
-### Graduation Project | Mechatronics Engineering
+### Graduation Project | Mechatronics Engineering | 2025–2026
 
 An autonomous mobile robot designed to detect and follow a designated person in real time using AI vision and ultrasonic sensors.
 
@@ -10,63 +10,57 @@ The system combines embedded programming, computer vision, sensor integration, m
 
 ## 🎯 Project Overview
 
-The robot is designed to autonomously follow a selected person while maintaining a safe distance.
+The Autonomous Human-Following Mobile Robot is designed to autonomously detect and follow a selected person while maintaining a safe distance.
 
-The system uses:
+The robot uses an AI vision camera to track the target person and multiple ultrasonic sensors to monitor the surrounding environment and improve safety during movement.
 
-- AI-based person tracking
-- Ultrasonic obstacle/distance sensing
-- Differential drive motion
-- Real-time embedded control
-- Wireless communication
-- BLDC motor control
+The project integrates hardware and software components into a real-time autonomous robotic platform.
 
 ### Potential Applications
 
 - Airports
 - Hospitals
-- Shopping malls
+- Shopping Malls
 - Hotels
-- Industrial environments
-- Autonomous assistance systems
+- Industrial Environments
+- Autonomous Assistance Systems
 
 ---
 
 ## 🏗️ System Architecture
 
 ```text
-        ┌──────────────────┐
-        │    HuskyLens     │
-        │   AI Vision      │
-        └────────┬─────────┘
-                 │ I2C
-                 ▼
-        ┌──────────────────┐
-        │     ESP32-S3     │
-        │  Main Controller │
-        └───────┬──────────┘
-                │
-       ┌────────┴─────────┐
-       │                  │
-       ▼                  ▼
-┌──────────────┐   ┌──────────────┐
-│  Ultrasonic  │   │  BLE / App   │
-│   Sensors    │   │ Communication│
-└──────────────┘   └──────────────┘
-       │
-       ▼
-┌──────────────────────────┐
-│     Motion Control       │
-│      & Navigation        │
-└────────────┬─────────────┘
-             │
-       ┌─────┴─────┐
-       ▼           ▼
-   Left Motor   Right Motor                                                                                                                                                                                                                   🔧 Hardware
+                    ┌──────────────────┐
+                    │    HuskyLens     │
+                    │   AI Vision      │
+                    │ Person Tracking  │
+                    └────────┬─────────┘
+                             │
+                            I2C
+                             │
+                             ▼
+                    ┌──────────────────┐
+                    │     ESP32-S3     │
+                    │ Main Controller  │
+                    └────────┬─────────┘
+                             │
+              ┌──────────────┼──────────────┐
+              │              │              │
+              ▼              ▼              ▼
+      ┌──────────────┐ ┌─────────────┐ ┌──────────────┐
+      │  Ultrasonic  │ │     BLE     │ │    Motion    │
+      │   Sensors    │ │ Application │ │   Control    │
+      └──────────────┘ └─────────────┘ └──────┬───────┘
+                                              │
+                                    ┌─────────┴─────────┐
+                                    │                   │
+                                    ▼                   ▼
+                              Left BLDC Motor    Right BLDC Motor
+🔧 Hardware
 Component	Purpose
 ESP32-S3	Main real-time controller
 HuskyLens	AI vision and target tracking
-HC-SR04 ×5	Distance and obstacle detection
+HC-SR04 ×5	Distance measurement and obstacle detection
 BLDC Motors ×2	Differential drive
 BLDC Motor Controllers ×2	Motor control
 PWM to 0–10V Modules ×2	Motor throttle interface
@@ -78,78 +72,107 @@ C++
 Embedded C/C++
 Embedded Systems
 ESP32-S3
+GPIO
 I2C
 PWM
-GPIO
 BLE
+Real-Time Control
 Robotics
+Human/Person Tracking
 Differential Drive
-Person Tracking
 Obstacle Detection
 Sensor Fusion
-Real-Time Control
+Motion Control
+Autonomous Navigation
 Tools
 Arduino IDE
 VS Code
 Proteus
+MATLAB / Simulink
 Git
 GitHub
 🎮 Control System
 
-The robot determines its movement based on:
+The robot determines its movement using information collected from the vision and ultrasonic sensing systems.
+
+The control logic considers:
 
 Target position detected by HuskyLens
-Distance measurements from ultrasonic sensors
-Target deviation from the robot's center
+Target deviation from the robot center
+Distance between the robot and the target
+Ultrasonic sensor measurements
 Safety distance
-Motion control logic
+Required movement direction and speed
 
-The final implementation uses a P-controller for the robot's low-speed tracking behavior.
+The final implementation uses a P-Controller for the robot's low-speed human-following behavior.
 
 📡 Communication
 HuskyLens → ESP32-S3
 
-Communication is performed using I2C.
+The HuskyLens AI vision camera communicates with the ESP32-S3 using I2C.
+
+The camera provides information about the detected target, including its position in the camera frame.
 
 ESP32-S3 → Motor Controllers
 
-Motor commands are generated using PWM signals.
+The ESP32-S3 generates PWM control signals that are converted to the required throttle signal for the BLDC motor controllers.
 
 Mobile Application → ESP32-S3
 
-BLE is used for wireless control and monitoring.
+Bluetooth Low Energy (BLE) is used for wireless communication and manual control/monitoring.
 
+📐 Robot Movement
+
+The robot uses a differential drive system.
+
+The two rear BLDC motors independently control the left and right sides of the robot.
+
+The movement direction is determined by the target's position relative to the center of the HuskyLens camera frame.
+
+                FRONT
+                  ↑
+        ┌───────────────────┐
+        │    HuskyLens      │
+        │    AI Camera      │
+        └───────────────────┘
+                  │
+                  │
+          Target Person
+                  │
+                  ▼
+        ┌───────────────────┐
+        │                   │
+        │      ROBOT        │
+        │                   │
+        │                   │
+        │  BLDC         BLDC│
+        │  LEFT         RIGHT│
+        └───────────────────┘
 📁 Repository Structure
 Autonomous-Human-Following-Mobile-Robot/
 │
 ├── Documents/
-│   ├── Project_Report/
-│   ├── Documentation/
-│   └── Diagrams/
 │
 ├── Images/
-│   ├── Robot/
-│   ├── Electronics/
-│   └── Testing/
 │
 ├── Source_Code/
-│   └── Robot_Control/
 │
 ├── Videos/
-│   ├── Demonstration/
-│   └── Testing/
 │
-└── README.md
+├── README.md
+│
+└── LICENSE
 📸 Project Photos
-Complete Robot
 
-Electronics
+Project photos, hardware images, electronics, and testing photos are available in the:
 
-Testing
+Images
 
-🎥 Demonstration
+folder.
 
-Project demonstration videos are available in the:
+🎥 Demonstration Videos
+
+Project demonstration and testing videos are available in the:
 
 Videos
 
@@ -157,35 +180,43 @@ folder.
 
 🧪 Testing
 
-The system was tested for:
+The robot was tested in real-world environments to evaluate:
 
-Person detection
-Person following
+Target person detection
+Human following
 Distance maintenance
-Obstacle detection
-Motor response
 Direction control
+Obstacle detection
+Ultrasonic sensing
+Motor response
+Communication
 System integration
-Real-world movement
+Hardware/software debugging
+
+The testing process included both individual subsystem testing and complete system integration.
+
 👨‍💻 My Responsibilities
 Team Leader
 
-My main responsibilities included:
+As the Team Leader, my main responsibilities included:
 
 System integration
 Embedded software development
 ESP32-S3 programming
-HuskyLens integration
+HuskyLens AI vision integration
 Ultrasonic sensor integration
 Motor control
 Sensor fusion
-Testing and debugging
-Troubleshooting hardware/software issues
+Real-time control logic
+Hardware/software debugging
+System testing
+Troubleshooting
 🏆 Achievement
-
 Best Graduation Project – Academic Year 2025/2026
 
 Egyptian Academy for Engineering and Advanced Technology (EAE&AT)
+
+The project was awarded Best Graduation Project for the academic year 2025/2026.
 
 Project:
 
@@ -195,18 +226,63 @@ Autonomous Human-Following Mobile Robot
 
 Possible future developments include:
 
-Improved person recognition
-SLAM and autonomous mapping
+Advanced person recognition
+Improved obstacle avoidance
 LiDAR integration
-Advanced obstacle avoidance
-ROS/ROS 2 integration
-Improved trajectory control
-GPS/indoor positioning
+SLAM and autonomous mapping
+ROS / ROS 2 integration
+Advanced trajectory control
 AI-based navigation
+Indoor positioning
+Improved safety and navigation algorithms
+Autonomous path planning
 🛠️ Technologies Summary
 
-ESP32-S3 C++ Embedded C HuskyLens I2C PWM BLE
+ESP32-S3
+C++
+Embedded C
+HuskyLens
+I2C
+PWM
+BLE
+HC-SR04
+BLDC Motors
+Differential Drive
+Sensor Fusion
+Computer Vision
+Robotics
+Embedded Systems
+Real-Time Control
 
-Ultrasonic Sensors BLDC Motors Differential Drive
+📄 Project Documentation
 
-Robotics Embedded Systems Computer Vision Automation
+Additional project documentation, technical files, diagrams, and reports can be found in the:
+
+Documents
+
+folder.
+
+👥 Project Team
+
+This project was developed as a graduation project by a multidisciplinary Mechatronics Engineering team.
+
+Team Leader
+
+Sabry Mohamed Sabry
+
+Mechatronics Engineer | Embedded Systems | Robotics | Automation
+
+📫 Contact
+LinkedIn
+
+Sabry Mohamed Sabry
+
+GitHub
+
+SabryMohamedSabry13
+
+⭐ Project
+
+If you find this project interesting, feel free to explore the source code, documentation, images, and demonstration videos.
+
+Built with Embedded Systems, Robotics, AI Vision, and Mechatronics Engineering.
